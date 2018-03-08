@@ -95,6 +95,11 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHo
     public int getItemCount() {
         return DataSet.size();
     }
+
+    public void filterList(List<Customer> filterdNames) {
+        this.DataSet = filterdNames;
+        notifyDataSetChanged();
+    }
 }
 
 

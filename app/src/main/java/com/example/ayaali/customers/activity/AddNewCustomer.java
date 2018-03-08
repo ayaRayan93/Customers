@@ -63,6 +63,7 @@ public class AddNewCustomer extends AppCompatActivity {
         values.put(CustomerTable.PersonToConnect,newCustomer.getPersonToConnect());
         values.put(CustomerTable.Tel,newCustomer.getTel());
         values.put(CustomerTable.TAXID,newCustomer.getTAXID());
+        values.put(CustomerTable.Flag,"0");//new not uploaded yet
         // Inserting Row
         //db.insert(TABLE_MOVIES, null, values);
         //db.close(); // Closing database connection

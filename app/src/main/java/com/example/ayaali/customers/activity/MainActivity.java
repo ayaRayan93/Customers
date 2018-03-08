@@ -1,5 +1,6 @@
 package com.example.ayaali.customers.activity;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -9,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.android.volley.Cache;
 import com.android.volley.Request;
@@ -27,6 +31,8 @@ import com.example.ayaali.customers.adapter.CustomerAdapter;
 import com.example.ayaali.customers.app.AppController;
 import com.example.ayaali.customers.json.Parser;
 import com.example.ayaali.customers.model.Customer;
+import com.example.ayaali.customers.store.CustomerContentProvider;
+import com.example.ayaali.customers.store.CustomerTable;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -86,10 +92,43 @@ public class MainActivity extends AppCompatActivity {
             mSwipeRefreshLayout.setRefreshing(true);
         }
 
+        final EditText search=(EditText)findViewById(R.id.search);
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filter(s.toString());
+            }
+        });
+
         initiateRefresh(flag);
+        insertCustomersTolocalDB(dataSet);
     }
 
+    private void filter(String text) {
+        //new array list that will hold the filtered data
+        List<Customer> filterdNames = new ArrayList<>();
 
+        //looping through existing elements
+        for (Customer s : dataSet) {
+            //if the existing elements contains the search input
+            if (s.getCustName().toLowerCase().contains(text.toLowerCase())) {
+                //adding the element to filtered list
+                filterdNames.add(s);
+
+            }
+        }
+        itemAdapter.filterList(filterdNames);
+    }
 
 
 
@@ -165,6 +204,34 @@ public class MainActivity extends AppCompatActivity {
     private void onRefreshComplete()
     {
         mSwipeRefreshLayout.setRefreshing(false);
+
+    }
+    public void insertCustomersTolocalDB(List<Customer> customers)
+    {
+        for (int i=0;i<customers.size();i++)
+        {
+            addCustomer(customers.get(i));
+        }
+    }
+
+    public void addCustomer(Customer customer)
+    {
+
+        // SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(CustomerTable.CustomerCode, customer.getCustomerCode());
+        values.put(CustomerTable.CustName, customer.getCustName());
+        values.put(CustomerTable.StreetAra,customer.getStreetAra());
+        values.put(CustomerTable.Classification,customer.getClassification());
+        values.put(CustomerTable.PersonToConnect,customer.getPersonToConnect());
+        values.put(CustomerTable.Tel,customer.getTel());
+        values.put(CustomerTable.TAXID,customer.getTAXID());
+        values.put(CustomerTable.Flag,"1");//
+        // Inserting Row
+        //db.insert(TABLE_MOVIES, null, values);
+        //db.close(); // Closing database connection
+        CustomerContentProvider moviesContentProvider=new CustomerContentProvider(this);
+        moviesContentProvider.insert(CustomerContentProvider.CONTENT_URI_add,values);
 
     }
 }
