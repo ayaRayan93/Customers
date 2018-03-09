@@ -13,7 +13,7 @@ public class CustomerTable {
     public static final String CustomerCode ="CustomerCode" ;
     public static final String CustName ="CustName" ;
     public static final String StreetAra="StreetAra" ;
-    public static final String Classification="Classification" ;
+    public static final String Classification="classification" ;
     public static final String PersonToConnect="PersonToConnect" ;
     public static final String Tel="Tel" ;
     public static final String TAXID="TAXID" ;

@@ -1,10 +1,8 @@
 package com.example.ayaali.customers.activity;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,12 +10,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -33,6 +28,7 @@ import com.example.ayaali.customers.json.Parser;
 import com.example.ayaali.customers.model.Customer;
 import com.example.ayaali.customers.store.CustomerContentProvider;
 import com.example.ayaali.customers.store.CustomerTable;
+import com.example.ayaali.customers.store.ReadDataFromDB;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -40,7 +36,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
+
+import static com.example.ayaali.customers.store.ReadDataFromDB.getAllCustomerForSalesPerson;
+import static com.example.ayaali.customers.store.WriteDataToDB.downloadData;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
+        downloadData();//for first time do load to database
         Button AddNew=(Button)findViewById(R.id.AddNew);
         AddNew.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +69,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        Button update=(Button)findViewById(R.id.update);
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downloadData();
+            }
+        });
+
         dataSet = new ArrayList<>();
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mSwipeRefreshLayout=(SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
@@ -134,73 +140,13 @@ public class MainActivity extends AppCompatActivity {
 
     public  void initiateRefresh(int i)
     {
-        String Url;
-        if(i!=0)
-            Url="http://toh.hadeya.net/api/TOHCustomers/allTOHCustomers/13007";
-        else
-            Url="http://toh.hadeya.net/api/TOHCustomers/allTOHCustomers/13007";
-        /**
-         * Execute the background task, which uses {@link AsyncTask} to load the data.
-         */
-        // We first check for cached request
-        Cache cache = AppController.getInstance().getRequestQueue().getCache();
-        Cache.Entry entry = cache.get(Url);
-        if (entry != null) {
-            // fetch the data from cache
-            try {
-                String data = new String(entry.data, "UTF-8");
-                clearDataSet();
-                Iterator iterator = Parser.parseStringToJson(data).iterator();
-                while (iterator.hasNext()){
-                    Customer movie = (Customer) iterator.next();
-                    dataSet.add(movie);
-                    itemAdapter.notifyItemInserted(dataSet.size() - 1);
-                }
 
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        /////////////connection//////////
-        StringRequest strReq = new StringRequest(Request.Method.GET, Url, new Response.Listener<String>()
-        {
-            @Override
-            public void onResponse(String response)
-            {
-                Log.d("response", response);
-                clearDataSet();
-                Iterator iterator = Parser.parseStringToJson(response).iterator();
-                while (iterator.hasNext()){
-                    Customer movie = (Customer) iterator.next();
-                    dataSet.add(movie);
-                    itemAdapter.notifyItemInserted(dataSet.size() - 1);
-                }
-                onRefreshComplete();
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Stop the refreshing indicator
-                mSwipeRefreshLayout.setRefreshing(false);
-                Log.d("response", error.toString());
-            }
-        });
-
-        // Adding request to volley request queue
-        AppController.getInstance().addToRequestQueue(strReq);
+        dataSet= getAllCustomerForSalesPerson(this);
+        itemAdapter.filterList(dataSet);
+        onRefreshComplete();
 
     }
 
-    private void clearDataSet()
-    {
-        if (dataSet != null){
-            dataSet.clear();
-            itemAdapter.notifyDataSetChanged();
-        }
-    }
     private void onRefreshComplete()
     {
         mSwipeRefreshLayout.setRefreshing(false);

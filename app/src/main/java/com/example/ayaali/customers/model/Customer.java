@@ -5,7 +5,7 @@ package com.example.ayaali.customers.model;
  */
 
 public class Customer {
-    String CustomerCode,CustName,CustomerNameLat,StreetAra,Classification,PersonToConnect,Tel,TAXID,SaleAreaCode,Notes,SalesRepCode,CodeList,NotActive;
+    String Flag,CustomerCode,CustName,CustomerNameLat,StreetAra,Classification,PersonToConnect,Tel,TAXID,SaleAreaCode,Notes,SalesRepCode,CodeList,NotActive;
 
     public String getCustomerCode() {
         return CustomerCode;
@@ -23,6 +23,14 @@ public class Customer {
         Tel = tel;
         this.TAXID = TAXID;
         SaleAreaCode = saleAreaCode;
+    }
+
+    public String getFlag() {
+        return Flag;
+    }
+
+    public void setFlag(String flag) {
+        Flag = flag;
     }
 
     public void setCustomerCode(String customerCode) {

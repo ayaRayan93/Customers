@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.ayaali.customers.model.Classification;
+
 /**
  * Created by AyaAli on 07/03/2018.
  */
@@ -22,6 +24,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         CustomerTable.onCreate(db);
+        AreaTable.onCreate(db);
+        ClassificationTable.onCreate(db);
     }
 
     @Override

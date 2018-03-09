@@ -25,12 +25,13 @@
             android:hint="Address"
             android:id="@+id/Address"
             />
-        <EditText
+        <Spinner android:id="@+id/spinnerClassification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Classification"
-            android:id="@+id/Classification"
-            />
+            android:textSize="20dp"
+            android:textColor="#000">
+        </Spinner>
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,12 +50,13 @@
             android:hint="Tax Number"
             android:id="@+id/TaxNumber"
             />
-        <EditText
+        <Spinner android:id="@+id/spinnerArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Area"
-            android:id="@+id/Area"
-            />
+            android:textSize="20dp"
+            android:textColor="#000">
+        </Spinner>
+
 <Button
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

@@ -11,29 +11,31 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
+import com.example.ayaali.customers.model.Classification;
+
 /**
- * Created by AyaAli on 07/03/2018.
+ * Created by AyaAli on 09/03/2018.
  */
 
-public class CustomerContentProvider extends ContentProvider {
+public class ClassificationContentProvider extends ContentProvider {
     // database
-    public static DataBaseHelper database;
+    private DataBaseHelper database=CustomerContentProvider.database;
     private Context context;
     // used for the UriMacher
-    public CustomerContentProvider() {
+    public ClassificationContentProvider() {
 
     }
-    public CustomerContentProvider(Context context) {
+    public ClassificationContentProvider(Context context) {
         this.context = context;
-        database = new DataBaseHelper(context);
+        //database = new DataBaseHelper(context);
     }
 
-    private static final int TODOS = 10;
-    private static final int TODO_ID = 20;
+    private static final int TODOS = 12;
+    private static final int TODO_ID = 22;
 
     private static final String AUTHORITY = "com.example.ayaali.customers.store";
 
-    private static final String BASE_PATH = "customers";
+    private static final String BASE_PATH = "classifications";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY
             + "/" + BASE_PATH);
     public static final Uri CONTENT_URI_add = Uri.parse("content://" + AUTHORITY
@@ -53,8 +55,8 @@ public class CustomerContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        database = new DataBaseHelper(context);
-
+        //database = new DataBaseHelper(context);
+        database = CustomerContentProvider.database;
         return false;
     }
 
@@ -68,7 +70,7 @@ public class CustomerContentProvider extends ContentProvider {
         // checkColumns(projection);
 
         // Set the table
-        queryBuilder.setTables(CustomerTable.CustomerTable);
+        queryBuilder.setTables(ClassificationTable.ClassificationTable);
 
         int uriType = sURIMatcher.match(uri);
         switch (uriType) {
@@ -104,7 +106,7 @@ public class CustomerContentProvider extends ContentProvider {
         SQLiteDatabase sqlDB = database.getWritableDatabase();
         long id = 0;
         try {
-            id = sqlDB.insert(CustomerTable.CustomerTable, null, values);
+            id = sqlDB.insert(ClassificationTable.ClassificationTable, null, values);
         }
         catch(Exception e){
             throw new IllegalArgumentException("Unknown URI: " + uri);

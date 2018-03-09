@@ -1,5 +1,7 @@
 package com.example.ayaali.customers.json;
 
+import com.example.ayaali.customers.model.Area;
+import com.example.ayaali.customers.model.Classification;
 import com.example.ayaali.customers.model.Customer;
 
 import org.json.JSONArray;
@@ -28,7 +30,7 @@ public class Parser {
                 String CustName =employeeJsonObject.optString("CustName");
                 String CustomerNameLat = employeeJsonObject.optString("CustomerNameLat");
                 String StreetAra = employeeJsonObject.optString("StreetAra");
-                String Classification = employeeJsonObject.optString("Classification");
+                String Classification = employeeJsonObject.optString("ClassificationTable");
                 String PersonToConnect = employeeJsonObject.optString("PersonToConnect");
                 String Tel = employeeJsonObject.optString("Tel");
                 String TAXID = employeeJsonObject.optString("TAXID");
@@ -63,6 +65,70 @@ public class Parser {
             }
 
             return modelCustomer;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }
+    public static List<Classification> parseClassification(String data) {
+        List<Classification> modelClassification;
+
+        try {
+            JSONArray jsonArray = new JSONArray(data);
+            modelClassification = new ArrayList<>();
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject employeeJsonObject = jsonArray.getJSONObject(i);
+                String Code = employeeJsonObject.optString("CustomerClassCode");
+                String arname =employeeJsonObject.optString("CustomerClassName");
+
+
+                Classification classification = new Classification();
+                classification.setId(Code);
+                classification.setName(arname);
+
+                modelClassification.add(classification);
+
+
+
+            }
+
+            return modelClassification;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }
+    public static List<Area> parseArea(String data) {
+        List<Area> modelArea;
+
+        try {
+            JSONArray jsonArray = new JSONArray(data);
+            modelArea = new ArrayList<>();
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject employeeJsonObject = jsonArray.getJSONObject(i);
+                String Code = employeeJsonObject.optString("SalesZoneCode");
+                String arname =employeeJsonObject.optString("SalesZoneName");
+
+
+                Area area = new Area();
+                area.setId(Code);
+                area.setName(arname);
+
+                modelArea.add(area);
+
+
+
+            }
+
+            return modelArea;
 
         } catch (JSONException e) {
             e.printStackTrace();
